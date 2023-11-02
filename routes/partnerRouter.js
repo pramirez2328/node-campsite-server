@@ -21,7 +21,7 @@ partnerRouter
   .post((req, res, next) => {
     Partner.create(req.body)
       .then((partner) => {
-        console.log('Campsite Created ', partner);
+        console.log('Partner Created ', partner);
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(partner);
