@@ -2,6 +2,7 @@ var express = require('express');
 const passport = require('passport');
 const User = require('../models/user');
 var router = express.Router();
+const authenticate = require('../authenticate');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -25,9 +26,10 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
+  const token = authenticate.getToken({ _id: req.user._id });
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
-  res.json({ success: true, status: 'You are successfully logged in!' });
+  res.json({ success: true, token: token, status: 'Congratulations, You are successfully logged in!' });
 });
 
 module.exports = router;
