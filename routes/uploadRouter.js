@@ -19,6 +19,7 @@ const imageFileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage: storage, fileFilter: imageFileFilter });
+
 const uploadRouter = express.Router();
 
 uploadRouter
