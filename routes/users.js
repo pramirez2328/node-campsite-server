@@ -18,7 +18,7 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, (req, res, ne
       .catch((err) => next(err));
   } else {
     // If the user is not an admin, return an error
-    const err = new Error('You are not authorized to access this resource!');
+    const err = new Error('You are not authorized to access this resource!, only admin');
     err.status = 403;
     return next(err);
   }
