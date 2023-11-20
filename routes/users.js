@@ -41,6 +41,20 @@ router.post('/signup', cors.corsWithOptions, (req, res) => {
   });
 });
 
+router.get('/facebook/token', passport.authenticate('facebook-token'), (req, res) => {
+  if (req.user) {
+    const token = authenticate.getToken({ _id: req.user._id });
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ success: true, token: token, status: 'You are successfully logged in!' });
+  } else {
+    // Handle the case where req.user is undefined (e.g., Facebook login failed)
+    res.statusCode = 401;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ success: false, status: 'Facebook login failed.' });
+  }
+});
+
 router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req, res) => {
   const token = authenticate.getToken({ _id: req.user._id });
   res.statusCode = 200;

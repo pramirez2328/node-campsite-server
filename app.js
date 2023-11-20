@@ -18,14 +18,6 @@ var express = require('express');
 var app = express();
 
 // Secure traffic only
-app.all('*', (req, res, next) => {
-  if (req.secure) {
-    return next();
-  } else {
-    console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
-    res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
-  }
-});
 
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
@@ -41,6 +33,7 @@ connect.then(
 );
 
 // view engine setup
+app.use(express.static(__dirname + '/public'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -57,6 +50,15 @@ app.use(
     store: new FileStore(),
   })
 );
+
+app.all('*', (req, res, next) => {
+  if (req.secure) {
+    return next();
+  } else {
+    console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
+    res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
+  }
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,7 +78,6 @@ function auth(req, res, next) {
 }
 
 app.use(auth);
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/campsites', campsiteRouter);
 app.use('/promotions', promotionRouter);
